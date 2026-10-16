@@ -1,46 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-
-function formatDate(value) {
-  if (!value) return "N/A";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "N/A";
-  return date.toLocaleString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true
-  });
-}
-
-function formatAmount(value, currency = "INR") {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 2
-  }).format(Number(value || 0));
-}
-
-function getStatusClass(status) {
-  const value = String(status || "").toUpperCase();
-
-  if (value === "SUCCESS" || value === "ACTIVE") {
-    return "admin-payment-drawer-status admin-payment-drawer-status-success";
-  }
-
-  if (value === "PENDING" || value === "CREATED") {
-    return "admin-payment-drawer-status admin-payment-drawer-status-warning";
-  }
-
-  if (value === "FAILED" || value === "REFUNDED" || value === "REJECTED") {
-    return "admin-payment-drawer-status admin-payment-drawer-status-danger";
-  }
-
-  return "admin-payment-drawer-status admin-payment-drawer-status-neutral";
-}
+import { Info, StatusInfo, formatDate, formatAmount } from "./paymentShared";
 
 export default function PaymentDetailsDrawer({ payment, open, onClose }) {
   if (!open || !payment) return null;
@@ -52,21 +13,13 @@ export default function PaymentDetailsDrawer({ payment, open, onClose }) {
 
   return (
     <div className="admin-payment-drawer-overlay" onClick={onClose}>
-      <aside
-        className="admin-payment-drawer"
-        onClick={(event) => event.stopPropagation()}
-      >
+      <aside className="admin-payment-drawer" onClick={(e) => e.stopPropagation()}>
         <div className="admin-payment-drawer-header">
           <div>
             <h3>Payment Details</h3>
             <p>{user?.name || user?.email || "Payment Transaction"}</p>
           </div>
-
-          <button
-            type="button"
-            onClick={onClose}
-            className="admin-payment-drawer-close"
-          >
+          <button type="button" onClick={onClose} className="admin-payment-drawer-close" aria-label="Close">
             <X size={18} />
           </button>
         </div>
@@ -74,68 +27,33 @@ export default function PaymentDetailsDrawer({ payment, open, onClose }) {
         <div className="admin-payment-drawer-body">
           <section>
             <h4>Payment Information</h4>
-
             <Info label="Payment ID" value={transaction?.id} />
-
-            <Info
-              label="Razorpay Payment ID"
-              value={transaction?.razorpayPaymentId}
-            />
-
-            <Info
-              label="Razorpay Order ID"
-              value={transaction?.razorpayOrderId}
-            />
-
-            <Info
-              label="Amount"
-              value={formatAmount(
-                transaction?.amount,
-                transaction?.currency
-              )}
-            />
-
+            <Info label="Razorpay Payment ID" value={transaction?.razorpayPaymentId} />
+            <Info label="Razorpay Subscription ID" value={subscription?.razorpaySubscriptionId} />
+            <Info label="Razorpay Invoice ID" value={transaction?.razorpayInvoiceId} />
+            <Info label="Amount" value={formatAmount(transaction?.amount, transaction?.currency)} />
             <Info label="Currency" value={transaction?.currency} />
-
-            <StatusInfo
-              label="Payment Status"
-              status={transaction?.status}
-            />
-
-            <Info label="Payment Method" value={transaction?.method} />
-
-            <Info
-              label="Created At"
-              value={formatDate(transaction?.createdAt)}
-            />
-
-            <Info
-              label="Paid At"
-              value={formatDate(transaction?.paidAt)}
-            />
+            <StatusInfo label="Payment Status" status={transaction?.status} />
+            {transaction?.failureReason && (
+              <Info label="Failure Reason" value={transaction.failureReason} />
+            )}
+            <Info label="Created At" value={formatDate(transaction?.createdAt)} />
+            <Info label="Paid At" value={formatDate(transaction?.paidAt)} />
           </section>
 
           <section>
             <h4>User Information</h4>
-
             <Info label="Name" value={user?.name} />
             <Info label="Email" value={user?.email} />
-            {/* <Info label="User ID" value={user?.id} /> */}
           </section>
 
           <section>
             <h4>Company Information</h4>
-
             <Info label="Company Name" value={company?.name} />
             <Info label="Business Type" value={company?.businessType} />
             <Info label="GST Number" value={company?.gstNumber} />
             <Info label="PAN Number" value={company?.panNumber} />
-
-            <Info
-              label="Registration Number"
-              value={company?.registrationNumber}
-            />
-
+            <Info label="Registration Number" value={company?.registrationNumber} />
             <Info label="Business Email" value={company?.businessEmail} />
             <Info label="Business Phone" value={company?.businessPhone} />
             <Info label="Address" value={company?.address} />
@@ -143,66 +61,18 @@ export default function PaymentDetailsDrawer({ payment, open, onClose }) {
 
           <section>
             <h4>Subscription Information</h4>
-
-            <Info
-              label="Plan"
-              value={subscription?.plan?.name || subscription?.planName}
-            />
-
-            <Info
-              label="Billing Cycle"
-              value={subscription?.billingCycle}
-            />
-
-            {/* <Info
-              label="Subscription ID"
-              value={subscription?.id}
-            /> */}
-
-            <StatusInfo
-              label="Status"
-              status={subscription?.status}
-            />
-
-            <Info
-              label="Start Date"
-              value={formatDate(subscription?.startDate)}
-            />
-
-            <Info
-              label="End Date"
-              value={formatDate(subscription?.endDate)}
-            />
-
-            <Info
-              label="Created At"
-              value={formatDate(subscription?.createdAt)}
-            />
+            <Info label="Plan" value={subscription?.plan?.name || subscription?.planName} />
+            <Info label="Billing Cycle" value={subscription?.billingCycle} />
+            <StatusInfo label="Status" status={subscription?.status} />
+            <Info label="Start Date" value={formatDate(subscription?.startDate)} />
+            <Info label="Valid Till" value={formatDate(subscription?.endDate)} />
+            {subscription?.cancelledAt && (
+              <Info label="Cancelled At" value={formatDate(subscription.cancelledAt)} />
+            )}
+            <Info label="Created At" value={formatDate(subscription?.createdAt)} />
           </section>
         </div>
       </aside>
-    </div>
-  );
-}
-
-function Info({ label, value }) {
-  return (
-    <div className="admin-payment-info-row">
-      <span>{label}</span>
-      <strong>{value || "N/A"}</strong>
-    </div>
-  );
-}
-
-function StatusInfo({ label, status }) {
-  return (
-    <div className="admin-payment-info-row">
-      <span>{label}</span>
-      <strong>
-        <span className={getStatusClass(status)}>
-          {status || "N/A"}
-        </span>
-      </strong>
     </div>
   );
 }

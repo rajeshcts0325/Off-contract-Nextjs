@@ -117,6 +117,7 @@ export const getAdminPaymentLogsService = async (req, query = {}) => {
         status: true,
         razorpayOrderId: true,
         razorpayPaymentId: true,
+        razorpayInvoiceId: true,      // ADD
         paidAt: true,
         failureReason: true,
         createdAt: true,
@@ -154,6 +155,8 @@ export const getAdminPaymentLogsService = async (req, query = {}) => {
         subscription: {
           select: {
             id: true,
+            razorpaySubscriptionId: true,  // ADD
+            cancelledAt: true,             // ADD
             status: true,
             amount: true,
             billingCycle: true,
@@ -250,6 +253,8 @@ export const getAdminPaymentLogsService = async (req, query = {}) => {
     subscription: payment.subscription
       ? {
           id: payment.subscription.id,
+          razorpaySubscriptionId: payment.subscription.razorpaySubscriptionId,  // ADD
+          cancelledAt: payment.subscription.cancelledAt, 
           status: payment.subscription.status,
           amount: payment.subscription.amount,
           billingCycle: payment.subscription.billingCycle,
@@ -271,11 +276,13 @@ export const getAdminPaymentLogsService = async (req, query = {}) => {
       : null,
 
     payment: {
+      id: payment.id,    
       amount: payment.amount,
       currency: payment.currency,
       status: payment.status,
       razorpayOrderId: payment.razorpayOrderId,
       razorpayPaymentId: payment.razorpayPaymentId,
+      razorpayInvoiceId: payment.razorpayInvoiceId,    // ADD
       paidAt: payment.paidAt,
       failureReason: payment.failureReason,
       createdAt: payment.createdAt,
@@ -331,6 +338,7 @@ export const getAdminPaymentByIdService = async (req, paymentId) => {
       status: true,
       razorpayOrderId: true,
       razorpayPaymentId: true,
+      razorpayInvoiceId: true,      // ADD
       paidAt: true,
       failureReason: true,
       createdAt: true,
@@ -368,6 +376,8 @@ export const getAdminPaymentByIdService = async (req, paymentId) => {
       subscription: {
         select: {
           id: true,
+          razorpaySubscriptionId: true,  // ADD
+          cancelledAt: true,             // ADD
           status: true,
           amount: true,
           billingCycle: true,
@@ -440,6 +450,8 @@ export const getAdminPaymentByIdService = async (req, paymentId) => {
     subscription: payment.subscription
       ? {
           id: payment.subscription.id,
+          razorpaySubscriptionId: payment.subscription.razorpaySubscriptionId,  // ADD
+          cancelledAt: payment.subscription.cancelledAt,                        // ADD
           status: payment.subscription.status,
           amount: payment.subscription.amount,
           billingCycle: payment.subscription.billingCycle,
@@ -466,6 +478,7 @@ export const getAdminPaymentByIdService = async (req, paymentId) => {
       status: payment.status,
       razorpayOrderId: payment.razorpayOrderId,
       razorpayPaymentId: payment.razorpayPaymentId,
+      razorpayInvoiceId: payment.razorpayInvoiceId,    // ADD
       paidAt: payment.paidAt,
       createdAt: payment.createdAt,
       failureReason: payment.failureReason,

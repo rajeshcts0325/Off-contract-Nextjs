@@ -872,3 +872,105 @@
   background: #06443f;
   color: #fff;
 }
+
+
+/* ---- append to admin-payment.css ---- */
+
+/* loading / error text inside the drawer body */
+.admin-payment-drawer-note {
+  margin: 0;
+  padding: 24px 0;
+  text-align: center;
+  color: #64716f;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.admin-payment-drawer-note-error {
+  color: #b3261e;
+}
+
+/* sticky footer with the receipt actions */
+.admin-payment-drawer-footer {
+  display: flex;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--ofc-border, #e2ebea);
+  background: var(--ofc-white, #fff);
+  flex-shrink: 0;
+}
+
+.admin-receipt-btn {
+  height: 44px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--ofc-border, #dce7e5);
+  border-radius: 12px;
+  background: #f8fbfa;
+  color: var(--ofc-primary, #035027);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-receipt-btn.primary {
+  flex: 1;
+  background: var(--ofc-primary, #035027);
+  border-color: var(--ofc-primary, #035027);
+  color: #fff;
+}
+
+.admin-receipt-btn:hover:not(:disabled) {
+  background: #023c1d;
+  border-color: #023c1d;
+  color: #fff;
+}
+
+.admin-receipt-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-receipt-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(3, 80, 39, 0.2);
+}
+
+/* total block (a <section>, so it inherits the drawer card look) */
+.admin-payment-drawer-body section.admin-receipt-total {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-left: 5px solid var(--ofc-primary, #035027);
+}
+
+.admin-receipt-total span {
+  color: #64716f;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-receipt-total strong {
+  color: #101b1a;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.admin-receipt-total p {
+  margin: 0;
+  color: #64716f;
+  font-size: 12px;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .admin-payment-drawer-footer {
+    padding: 14px 18px;
+  }
+}
